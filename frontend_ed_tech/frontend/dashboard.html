@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=/dashboard.html">
+    <title>Redirecting to Dashboard...</title>
+    <script>
+        const target = window.location.protocol === 'file:' ? '../dashboard.html' : '/dashboard.html';
+        window.location.replace(target);
+    </script>
+</head>
+<body style="background:#0a0c10;color:#c8a84e;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;">
+    <p>Redirecting to <a href="/dashboard.html" style="color:#e0c370;">Dashboard</a>...</p>
+</body>
+</html>

@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduAI Hub - Dashboard</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="css/dashboard.css?v=2.0">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Animated particle network background -->
+    <canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+    <div class="bg-glowing-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Floating geometric shapes -->
+    <div class="floating-shapes" aria-hidden="true">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+        <div class="shape shape-5"></div>
+    </div>
+
+    <header class="global-header">
+        <div class="header-left">
+            <h1 class="logo-text">EduAI Hub</h1>
+        </div>
+        <div class="header-right">
+            <div class="user-profile" id="user-profile-btn" style="position: relative; cursor: pointer;">
+                <div class="user-info">
+                    <span class="username">Aditya Sharma</span>
+                </div>
+                <div class="avatar">AS</div>
+                
+                <!-- Profile Dropdown -->
+                <div class="profile-dropdown" id="profile-dropdown">
+                    <button id="my-profile-btn" class="dropdown-item" data-action="profile-section">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        My Profile
+                    </button>
+                    <button id="logout-btn" class="dropdown-item">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+
+        <section id="selection-grid" class="grid-view active">
+            <div class="welcome-banner">
+                <h2>Select an AI Workspace</h2>
+                <p>Choose an agentic pipeline to assist with your academic research, note synthesis, or precise Q&A.</p>
+            </div>
+
+            <div class="cards-wrapper">
+                <div class="feature-card" data-action="rag-section">
+                    <div class="card-illustration">
+                        <img src="assets/images/rag.png" alt="Self-Correcting RAG Illustration" onerror="this.src='rag.png'">
+                    </div>
+                    <div class="feature-card-content">
+                        <div class="feature-chips">
+                            <span class="chip">Fact-Checked</span>
+                            <span class="chip">Strict Docs Mode</span>
+                        </div>
+                        <h3>InsightAI</h3>
+                        <p>Ask complex questions. The system retrieves, evaluates, and verifies context definitions to eliminate hallucinations.</p>
+                        <span class="card-action-text">Launch Chatbot</span>
+                    </div>
+                </div>
+
+                <div class="feature-card" data-action="notes-section">
+                    <div class="card-illustration">
+                        <img src="assets/images/notes_generation.png" alt="Notes Generator Illustration" onerror="this.src='notes_generation.png'">
+                    </div>
+                    <div class="feature-card-content">
+                        <div class="feature-chips">
+                            <span class="chip">Markdown Export</span>
+                            <span class="chip">Chunked Extraction</span>
+                        </div>
+                        <h3>Forger</h3>
+                        <p>Upload large books, dense PDFs, or syllabus structures to compile clean, summarized markdown concept logs.</p>
+                        <span class="card-action-text">Open Workspace</span>
+                    </div>
+                </div>
+
+                <div class="feature-card" data-action="research-section">
+                    <div class="card-illustration">
+                        <img src="assets/images/research_agent.png" alt="Research Agent Illustration" onerror="this.src='research_agent.png'">
+                    </div>
+                    <div class="feature-card-content">
+                        <div class="feature-chips">
+                            <span class="chip">Web Search</span>
+                            <span class="chip">Human-in-Loop</span>
+                        </div>
+                        <h3>ExplorerAI</h3>
+                        <p>Launch an autonomous deep research agent to execute multi-step web queries, gather sources, and compile detailed synthesis reports.</p>
+                        <span class="card-action-text">Launch Deep Research Agent</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="feature-view-container">
+            <button class="btn-back" id="back-to-hub">&larr; Back to Workspace Hub</button>
+
+            <div id="rag-section" class="dynamic-panel cortex-layout">
+                <div class="cortex-main-split">
+                    <!-- Left Sidebar (Cortex navigation & History) -->
+                    <aside class="cortex-sidebar">
+                        <div class="cortex-sidebar-top">
+                            <div class="cortex-brand">
+                                <span class="cortex-logo-badge">✦</span>
+                                <span class="cortex-brand-title">InsightAI</span>
+                            </div>
+                        </div>
+
+                        <div class="cortex-new-chat-wrap">
+                            <button id="new-chat-btn" class="cortex-new-btn">
+                                <span>+</span> New chat
+                            </button>
+                        </div>
+
+
+
+                        <div class="cortex-history-section">
+                            <span class="cortex-history-label">Recent Conversations</span>
+                            <ul id="chat-history-list" class="history-list cortex-history-list">
+                                <li class="history-item placeholder">Loading history...</li>
+                            </ul>
+                        </div>
+                    </aside>
+
+                    <!-- Main Chat Stage -->
+                    <section class="cortex-stage">
+                        <header class="cortex-stage-header">
+                            <div class="cortex-dropdown-pill">
+                                <span class="pill-dot">✦</span>
+                                <span>InsightAI</span>
+                                <small>▾</small>
+                            </div>
+                            <div class="cortex-stage-actions">
+                                <button type="button" class="mode-toggle cortex-mode-toggle" id="strict-docs-toggle" aria-pressed="false" title="Use uploaded documents plus general knowledge">
+                                    Flexible
+                                </button>
+                                <button type="button" class="cortex-back-btn" id="cortex-back-hub-btn" title="Exit to Hub">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                                    <span>Exit to Hub</span>
+                                </button>
+                            </div>
+                        </header>
+
+                        <div class="cortex-stage-body">
+                            <!-- Hero greeting (visible initially) -->
+                            <div class="cortex-hero-greeting" id="cortex-greeting-banner">
+                                <div class="cortex-glowing-sphere"></div>
+                                <h1 class="cortex-greeting-title">Hello, <span class="insight-profile-name">Learner</span></h1>
+                                <p class="cortex-greeting-subtitle">How can I assist you today?</p>
+                            </div>
+
+                            <!-- Chat stream container -->
+                            <div class="chat-wrapper cortex-chat-stream">
+                                <div class="chat-box" id="chat-output">
+                                    <div class="message system">System initialized. Awaiting source queries or document specifications...</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bottom prompt console -->
+                        <div class="cortex-bottom-console">
+                            <form class="cortex-input-box" id="chat-form">
+                                <input type="text" id="chat-input" class="cortex-input-field" placeholder="Ask me anything..." autocomplete="off" autocorrect="off" spellcheck="false">
+                                
+                                <div class="cortex-input-toolbar">
+                                    <div class="cortex-toolbar-left">
+                                        <label for="rag-file-input" class="cortex-attach-pill" title="Attach study document">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+                                            <span>Attach file</span>
+                                        </label>
+                                        <input type="file" id="rag-file-input" accept=".pdf,.doc,.docx,.txt,.md,.markdown" style="display: none;">
+                                        <button type="button" class="btn-primary" id="upload-rag-file" style="display:none;">Upload to RAG</button>
+                                        <span id="rag-file-name" class="cortex-attached-tag" style="display: none;"></span>
+                                    </div>
+
+                                    <div class="cortex-toolbar-right">
+                                        <button type="submit" class="cortex-send-btn" title="Send Query">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            <p class="upload-status" id="rag-upload-status" aria-live="polite"></p>
+
+                            <!-- Suggested starter prompt cards -->
+                            <div class="cortex-prompt-cards" id="cortex-starter-prompts">
+                                <div class="cortex-card" data-prompt="Synthesize the key points from my uploaded reference book into concise notes.">
+                                    <div class="card-icon">◷</div>
+                                    <div class="card-text">
+                                        <h4>Synthesize Data</h4>
+                                        <p>Turn notes and chapters into structured key bullet points.</p>
+                                    </div>
+                                </div>
+                                <div class="cortex-card" data-prompt="Give me intuitive analogies and real-world examples to explain this concept clearly.">
+                                    <div class="card-icon">💡</div>
+                                    <div class="card-text">
+                                        <h4>Explain with Analogies</h4>
+                                        <p>Break down complex academic theories with simple metaphors.</p>
+                                    </div>
+                                </div>
+                                <div class="cortex-card" data-prompt="Check facts and verify claims against the uploaded syllabus and text.">
+                                    <div class="card-icon">⚖</div>
+                                    <div class="card-text">
+                                        <h4>Check Facts</h4>
+                                        <p>Eliminate hallucinations with verified source context.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div id="notes-section" class="dynamic-panel forger-panel">
+                <!-- Forger Studio Hero Header -->
+                <div class="forger-header">
+                    <div class="forger-header-left">
+                        <div class="forger-badge">
+                            <span class="forger-badge-dot"></span>
+                            <span>SYNTHESIS ENGINE</span>
+                        </div>
+                        <h2 class="forger-title">Forger <em>Concept Studio</em></h2>
+                        <p class="forger-subtitle">Transform long academic papers, books, or dense texts into publication-grade, structured knowledge digests.</p>
+                    </div>
+                    <div class="forger-header-right">
+                        <button type="button" class="forger-action-pill forger-exit-btn" id="forger-back-hub-btn" title="Exit to Workspace Hub">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                            <span>Exit to Hub</span>
+                        </button>
+                        <button id="copy-notes-btn" class="forger-action-pill" style="display:none;" title="Copy Markdown">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            <span>Copy Notes</span>
+                        </button>
+                        <button id="print-notes-btn" class="forger-action-pill" style="display:none;" title="Print or Save PDF">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                            <span>Print / Export</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="forger-workspace">
+                    <!-- Left Config & Upload Column -->
+                    <div class="forger-sidebar">
+                        <div class="forger-upload-card">
+                            <label class="forger-dropzone" for="notes-file-input">
+                                <div class="forger-drop-icon-wrap">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="12" y2="12"></line><line x1="15" y1="15" x2="12" y2="12"></line></svg>
+                                </div>
+                                <div class="forger-drop-text">
+                                    <strong id="notes-file-title">Drop reference book here</strong>
+                                    <span id="notes-file-name">Supports PDF, DOCX, TXT, Markdown</span>
+                                </div>
+                            </label>
+                            <input type="file" id="notes-file-input" accept=".pdf,.doc,.docx,.txt,.md,.markdown" style="display: none;">
+                            
+                            <button class="btn-primary forger-compile-btn" id="generate-notes-btn">
+                                <span>[ COMPILE NOTES ]</span>
+                            </button>
+                        </div>
+
+                        <!-- Highlights card -->
+                        <div class="forger-info-card">
+                            <div class="info-item">
+                                <span class="info-dot">✦</span>
+                                <div>
+                                    <h5>Unlimited Resolution</h5>
+                                    <p>Sliding window context preserves micro-details without truncation.</p>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-dot">✦</span>
+                                <div>
+                                    <h5>Executive Synthesis</h5>
+                                    <p>Generates core concept cards, definitions, and logical frameworks.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Notes Reader Display -->
+                    <div class="forger-reader-wrap">
+                        <div class="forger-reader-header">
+                            <div class="reader-header-tabs">
+                                <span class="reader-tab active">Synthesized Document</span>
+                            </div>
+                            <span class="reader-status" id="forger-status-badge">Awaiting document</span>
+                        </div>
+
+                        <div class="forger-reader-viewport">
+                            <div class="forger-notes-paper" id="notes-output">
+                                <div class="forger-empty-state">
+                                    <div class="empty-glow-orb"></div>
+                                    <h3>Ready to synthesize your reading material</h3>
+                                    <p>Select a textbook, syllabus, or lecture paper to create a clean study guide.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="research-section" class="dynamic-panel research-panel">
+                <!-- Research Intelligence Lab Header -->
+                <div class="research-header">
+                    <div class="research-header-left">
+                        <div class="research-badge">
+                            <span class="research-badge-dot"></span>
+                            <span>AUTONOMOUS DEEP RESEARCH ENGINE</span>
+                        </div>
+                        <h2 class="research-title">ExplorerAI <em>Intelligence Lab</em></h2>
+                        <p class="research-subtitle">Autonomous multi-hop web synthesis, source verification, and publication-ready analytical reports.</p>
+                    </div>
+                    <div class="research-header-right">
+                        <button type="button" class="research-action-pill research-exit-btn" id="research-back-hub-btn" title="Exit to Workspace Hub">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6L6 18M6 6l12 12"></path></svg>
+                            <span>Exit to Hub</span>
+                        </button>
+                        <button id="copy-research-btn" class="research-action-pill" style="display:none;" title="Copy Markdown Report">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            <span>Copy Report</span>
+                        </button>
+                        <button id="print-research-btn" class="research-action-pill" style="display:none;" title="Print or Save PDF">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                            <span>Print / Export</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="research-workspace">
+                    <!-- Left Control Column -->
+                    <div class="research-sidebar">
+                        <div class="research-control-card">
+                            <div class="research-input-header">
+                                <label for="research-topic" class="research-field-label">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                    <span>RESEARCH OBJECTIVE</span>
+                                </label>
+                                <span class="research-shortcut-hint">Press Enter ↵</span>
+                            </div>
+                            <div class="research-input-wrap">
+                                <textarea id="research-topic" class="research-topic-textarea" placeholder="e.g., LoRA vs QLoRA: A Deep Dive into Memory, Speed, and Accuracy Trade-offs (2026 Update)" rows="3" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
+                            </div>
+
+                            <!-- Suggested Quick Topics -->
+                            <div class="research-quick-topics">
+                                <span class="quick-topics-label">Suggested vectors:</span>
+                                <div class="quick-topic-chips">
+                                    <button type="button" class="quick-chip" data-topic="LoRA vs QLoRA: Memory, Speed, and Quality Trade-offs in 2026">LoRA vs QLoRA</button>
+                                    <button type="button" class="quick-chip" data-topic="Mixture of Depths vs Early Exit in Modern LLM Inference">Mixture of Depths</button>
+                                    <button type="button" class="quick-chip" data-topic="State Space Models (Mamba-2) vs FlashAttention-3 Transformers">SSMs vs Transformers</button>
+                                </div>
+                            </div>
+
+                            <button class="btn-primary research-launch-btn" id="start-research-btn">
+                                <span class="launch-btn-icon">⚡</span>
+                                <span>[ LAUNCH DEEP RESEARCH ]</span>
+                            </button>
+                        </div>
+
+                        <!-- Human In The Loop Feedback Card (Hidden by default, shown when graph pauses) -->
+                        <div id="feedback-container" class="research-feedback-card" style="display: none;">
+                            <div class="feedback-card-header">
+                                <div class="feedback-badge">
+                                    <span class="feedback-pulse-dot"></span>
+                                    <span>HUMAN REVIEW REQUIRED</span>
+                                </div>
+                                <h4>Verify Search Vectors</h4>
+                            </div>
+                            <p class="feedback-desc">The orchestrator decomposed your objective into the following target queries. You can customize them or launch the search as-is:</p>
+                            
+                            <div class="query-counter-bar">
+                                <span id="query-selection-count">Selected: 0</span>
+                                <span class="token-limit-badge">Select 2–3 for 8k token limit</span>
+                            </div>
+                            <ul id="research-queries-list" class="research-queries-pills"></ul>
+
+                            <div class="feedback-input-wrap">
+                                <label for="research-feedback-input" class="feedback-sublabel">Modify queries or add constraints (optional):</label>
+                                <textarea id="research-feedback-input" class="research-feedback-textarea" placeholder="Leave empty to accept as-is, or type adjustments here..." rows="3" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
+                            </div>
+
+                            <div class="feedback-btn-group">
+                                <button class="btn-primary feedback-confirm-btn" id="submit-feedback-btn">
+                                    <span>[ CONFIRM &amp; EXECUTE RESEARCH ]</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Features / Specs card -->
+                        <div class="research-specs-card">
+                            <div class="specs-item">
+                                <span class="specs-dot">✦</span>
+                                <div>
+                                    <h5>Tavily Live Web Multi-Hop</h5>
+                                    <p>Gathers 10+ fresh citations from authoritative technical papers and documentation.</p>
+                                </div>
+                            </div>
+                            <div class="specs-item">
+                                <span class="specs-dot">✦</span>
+                                <div>
+                                    <h5>Recursive Section Synthesis</h5>
+                                    <p>Parallelized LLM workers generate fully cited, code-supported analytical sections.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Display / Live Stream Column -->
+                    <div class="research-reader-wrap">
+                        <div class="research-reader-header">
+                            <div class="reader-header-tabs">
+                                <span class="reader-tab active">
+                                    <span class="tab-indicator-dot"></span>
+                                    <span>Intelligence Stream</span>
+                                </span>
+                            </div>
+                            <span class="reader-status" id="research-status-badge">Standby / Awaiting Target</span>
+                        </div>
+
+                        <div class="research-reader-viewport">
+                            <div class="research-log-screen" id="research-logs">
+                                <div class="research-empty-state">
+                                    <div class="research-glow-orb"></div>
+                                    <h3>Ready to deploy autonomous researcher</h3>
+                                    <p>Enter an objective on the left. The agent will formulate queries, pause for your review, browse the live web, and compile a verified intelligence report.</p>
+                                    
+                                    <div class="research-feature-pills">
+                                        <span class="feat-pill">128K Context Window</span>
+                                        <span class="feat-pill">Live Source Deduplication</span>
+                                        <span class="feat-pill">Zero Hallucination Grounding</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="profile-section" class="dynamic-panel">
+                <div class="panel-header">
+                    <h2>Profile Settings</h2>
+                    <p>Update your personal information and account security details.</p>
+                </div>
+                <div class="profile-layout">
+                    <div class="control-box profile-card">
+                        <h3>Personal Details</h3>
+                        <form id="profile-details-form">
+                            <div class="input-group">
+                                <label for="profile-firstname">First Name</label>
+                                <input type="text" id="profile-firstname" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="profile-lastname">Last Name</label>
+                                <input type="text" id="profile-lastname">
+                            </div>
+                            <div class="input-group">
+                                <label for="profile-email">Email Address</label>
+                                <input type="email" id="profile-email" required>
+                            </div>
+                            <button type="submit" class="btn-primary">Update Details</button>
+                            <p id="profile-details-msg" style="margin-top: 10px; font-size: 0.9rem;"></p>
+                        </form>
+                    </div>
+
+                    <div class="control-box profile-card">
+                        <h3>Change Password</h3>
+                        <form id="profile-password-form">
+                            <div class="input-group">
+                                <label for="profile-current-password">Current Password</label>
+                                <input type="password" id="profile-current-password" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="profile-new-password">New Password</label>
+                                <input type="password" id="profile-new-password" required placeholder="Minimum 8 characters">
+                            </div>
+                            <div class="input-group">
+                                <label for="profile-confirm-password">Confirm New Password</label>
+                                <input type="password" id="profile-confirm-password" required placeholder="Confirm your new password">
+                            </div>
+                            <button type="submit" class="btn-primary">Update Password</button>
+                            <p id="profile-password-msg" style="margin-top: 10px; font-size: 0.9rem;"></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <div class="modal-backdrop" id="strict-docs-modal" aria-hidden="true">
+        <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="strict-docs-title">
+            <h2 id="strict-docs-title">Use only uploaded documents?</h2>
+            <p>Choose whether the RAG chatbot should answer strictly from your uploaded files or combine them with general knowledge.</p>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" id="strict-docs-no">No</button>
+                <button type="button" class="btn-primary" id="strict-docs-yes">Yes</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/dashboard.js"></script>
+
+    <!-- Particle Network Animation -->
+    <script>
+    (function() {
+        const canvas = document.getElementById('particle-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+
+        let w, h, particles;
+        const PARTICLE_COUNT = 60;
+        const CONNECTION_DIST = 140;
+        const MOUSE_DIST = 180;
+        let mouse = { x: -1000, y: -1000 };
+
+        function resize() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+
+        function createParticles() {
+            particles = [];
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                particles.push({
+                    x: Math.random() * w,
+                    y: Math.random() * h,
+                    vx: (Math.random() - 0.5) * 0.4,
+                    vy: (Math.random() - 0.5) * 0.4,
+                    r: Math.random() * 2 + 1,
+                    alpha: Math.random() * 0.5 + 0.2
+                });
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, w, h);
+
+            // Draw connections
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < CONNECTION_DIST) {
+                        const alpha = (1 - dist / CONNECTION_DIST) * 0.15;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(200, 168, 78, ${alpha})`;
+                        ctx.lineWidth = 0.6;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            // Draw particles & mouse interactions
+            for (const p of particles) {
+                // Mouse repulsion
+                const mdx = p.x - mouse.x;
+                const mdy = p.y - mouse.y;
+                const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
+                if (mDist < MOUSE_DIST && mDist > 0) {
+                    const force = (MOUSE_DIST - mDist) / MOUSE_DIST * 0.02;
+                    p.vx += (mdx / mDist) * force;
+                    p.vy += (mdy / mDist) * force;
+                }
+
+                p.x += p.vx;
+                p.y += p.vy;
+
+                // Damping
+                p.vx *= 0.999;
+                p.vy *= 0.999;
+
+                // Wrap edges
+                if (p.x < 0) p.x = w;
+                if (p.x > w) p.x = 0;
+                if (p.y < 0) p.y = h;
+                if (p.y > h) p.y = 0;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(200, 168, 78, ${p.alpha})`;
+                ctx.fill();
+            }
+
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', () => { resize(); createParticles(); });
+        document.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        document.addEventListener('mouseleave', () => { mouse.x = -1000; mouse.y = -1000; });
+
+        resize();
+        createParticles();
+        draw();
+    })();
+    </script>
+</body>
+
+</html>

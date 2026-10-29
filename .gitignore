@@ -1,0 +1,49 @@
+# ==========================================
+# Python Bytecode & Cache Files (Useless Files)
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ==========================================
+# Environment Secrets & Local Configurations
+# ==========================================
+.env
+.env.local
+.env.*.local
+*.env
+! .env.example    # DO NOT ignore the example template file
+
+# ==========================================
+# Virtual Environments (Dependencies)
+# ==========================================
+venv/
+.venv/
+env/
+ENV/
+modules/
+
+# ==========================================
+# Application-Specific (Local Data & Vector Stores)
+# ==========================================
+# Ignores local file processing folders from your Document Settings
+documents/
+app/load_documents/uploads/
+*.pdf
+*.epub
+*.txt
+
+
+# ==========================================
+# IDE & System Specific Files
+# ==========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

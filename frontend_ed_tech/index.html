@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduAI Hub — AI-Powered Learning Platform</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="css/auth.css?v=2.0">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Particle wave canvas background -->
+    <canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+    <!-- ===================== LANDING VIEW ===================== -->
+    <div id="landing-view" class="view active">
+        <!-- Navigation -->
+        <nav class="top-nav">
+            <div class="nav-left">
+                <a href="#" class="nav-logo">🎓 EduAI Hub</a>
+            </div>
+            <div class="nav-center">
+                <a href="#" class="nav-link">FEATURES</a>
+                <a href="#" class="nav-link">TOOLS</a>
+                <a href="#" class="nav-link">ABOUT</a>
+            </div>
+            <div class="nav-right">
+                <a href="#" class="nav-signin" id="nav-signin-btn">SIGN IN</a>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                <span class="badge-text">AI-POWERED LEARNING</span>
+            </div>
+            <h1 class="hero-heading">
+                Unlock your<br>
+                <em>learning</em> potential
+            </h1>
+            <p class="hero-subtitle">
+                Through intelligent AI tools that transform how you<br>
+                study, research, and understand complex topics
+            </p>
+            <button class="hero-cta" id="hero-get-started">[GET STARTED]</button>
+        </section>
+    </div>
+
+    <!-- ===================== AUTH VIEW ===================== -->
+    <div id="auth-view" class="view">
+        <div class="auth-wrapper">
+            <a href="#" class="auth-back" id="auth-back-btn">← Back</a>
+
+            <div class="auth-card">
+                <form id="login-form" class="auth-form active">
+                    <h2>Welcome Back</h2>
+                    <p class="subtitle">Log in to access your AI study assistants</p>
+
+                    <div class="input-group">
+                        <label for="login-email">Email Address</label>
+                        <input type="email" id="login-email" required placeholder="you@example.com">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required placeholder="••••••••">
+                    </div>
+
+                    <div class="form-actions">
+                        <a href="#" class="forgot-link">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Sign In</button>
+
+                    <p class="toggle-text">New to EduAI? <a href="#" id="to-register">Create an account</a></p>
+                </form>
+
+                <form id="register-form" class="auth-form">
+                    <h2>Create Account</h2>
+                    <p class="subtitle">Start researching and learning smarter today</p>
+
+                    <div class="input-group">
+                        <label for="reg-email">Email Address</label>
+                        <input type="email" id="reg-email" required placeholder="you@example.com">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="reg-password">Password</label>
+                        <input type="password" id="reg-password" required placeholder="Minimum 6 characters">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="reg-confirm-password">Confirm Password</label>
+                        <input type="password" id="reg-confirm-password" required placeholder="Confirm your password">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Get Started</button>
+
+                    <p class="toggle-text">Already have an account? <a href="#" id="to-login">Sign in</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+
+    <!-- View Switching Logic -->
+    <script>
+    (function() {
+        const landingView = document.getElementById('landing-view');
+        const authView = document.getElementById('auth-view');
+        const navSignin = document.getElementById('nav-signin-btn');
+        const heroGetStarted = document.getElementById('hero-get-started');
+        const authBack = document.getElementById('auth-back-btn');
+
+        function showAuth(showRegister) {
+            landingView.classList.remove('active');
+            authView.classList.add('active');
+            if (showRegister) {
+                document.getElementById('login-form').classList.remove('active');
+                document.getElementById('register-form').classList.add('active');
+            } else {
+                document.getElementById('register-form').classList.remove('active');
+                document.getElementById('login-form').classList.add('active');
+            }
+        }
+
+        function showLanding() {
+            authView.classList.remove('active');
+            landingView.classList.add('active');
+        }
+
+        navSignin.addEventListener('click', (e) => { e.preventDefault(); showAuth(false); });
+        heroGetStarted.addEventListener('click', (e) => { e.preventDefault(); showAuth(true); });
+        authBack.addEventListener('click', (e) => { e.preventDefault(); showLanding(); });
+    })();
+    </script>
+
+    <!-- Flowing Dot Wave Animation -->
+    <script>
+    (function() {
+        const canvas = document.getElementById('particle-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+
+        let w, h;
+        const COLS = 90;
+        const ROWS = 45;
+        const SPACING = 18;
+        let time = 0;
+
+        function resize() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, w, h);
+            time += 0.008;
+
+            const centerX = w * 0.5;
+            const centerY = h * 0.65;
+            const perspective = 600;
+
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLS; col++) {
+                    const x3d = (col - COLS / 2) * SPACING;
+                    const z3d = (row - ROWS * 0.3) * SPACING;
+
+                    // Wave displacement
+                    const wave1 = Math.sin(col * 0.08 + time * 2.5) * 18;
+                    const wave2 = Math.sin(row * 0.12 + col * 0.05 + time * 1.8) * 12;
+                    const wave3 = Math.cos(col * 0.06 - time * 1.2) * 8;
+                    const y3d = wave1 + wave2 + wave3;
+
+                    // Perspective projection
+                    const scale = perspective / (perspective + z3d + 300);
+                    const screenX = centerX + x3d * scale;
+                    const screenY = centerY + (y3d - z3d * 0.4) * scale;
+
+                    // Skip if off screen
+                    if (screenX < -10 || screenX > w + 10 || screenY < -10 || screenY > h + 10) continue;
+
+                    // Depth-based size and opacity
+                    const depth = (row / ROWS);
+                    const dotSize = Math.max(0.4, 1.8 * scale);
+                    const alpha = (0.12 + 0.55 * (1 - depth)) * scale;
+
+                    ctx.beginPath();
+                    ctx.arc(screenX, screenY, dotSize, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(220, 210, 190, ${Math.min(alpha, 0.7)})`;
+                    ctx.fill();
+                }
+            }
+
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+        draw();
+    })();
+    </script>
+</body>
+
+</html>

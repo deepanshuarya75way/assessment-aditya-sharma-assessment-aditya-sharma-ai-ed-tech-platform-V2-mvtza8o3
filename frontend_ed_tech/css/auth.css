@@ -1,0 +1,510 @@
+/* ========================================
+   EduAI Hub — Landing / Auth Page Styles
+   ======================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital@0;1&display=swap');
+
+/* --- Reset & Root Variables --- */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #050505;
+    --card-bg: rgba(10, 10, 10, 0.92);
+    --text: #e8e8e8;
+    --muted: #888888;
+    --accent: #c8a84e;
+    --accent-hover: #dabb5e;
+    --input-bg: #111111;
+    --input-border: #2a2a2a;
+    --focus-border: #c8a84e;
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0a0a0a; }
+::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* --- Particle Canvas --- */
+#particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* ========================================
+   VIEW SYSTEM
+   ======================================== */
+.view {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.view.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+}
+
+/* ========================================
+   NAVBAR
+   ======================================== */
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(5, 5, 5, 0.55);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.nav-logo {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--text);
+}
+
+.nav-center {
+    display: flex;
+    align-items: center;
+    gap: 2.4rem;
+}
+
+.nav-link {
+    font-family: var(--font-heading);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--text);
+}
+
+.nav-signin {
+    font-family: var(--font-heading);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent) !important;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.nav-signin:hover {
+    color: var(--accent-hover) !important;
+}
+
+/* ========================================
+   HERO SECTION
+   ======================================== */
+#landing-view {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    padding: 2rem;
+}
+
+/* Badge / pill */
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1.1rem;
+    border: 1px solid rgba(200, 168, 78, 0.4);
+    border-radius: 999px;
+    font-family: var(--font-heading);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 2.2rem;
+    background: rgba(200, 168, 78, 0.06);
+}
+
+.badge-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+    box-shadow: 0 0 8px rgba(200, 168, 78, 0.6);
+}
+
+.badge-text {
+    font-family: var(--font-heading);
+}
+
+/* Heading */
+.hero-heading {
+    font-family: var(--font-heading);
+    font-size: 3.8rem;
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 1.4rem;
+}
+
+.hero-heading em {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--accent);
+}
+
+/* Subtitle */
+.hero-subtitle {
+    max-width: 520px;
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--muted);
+    margin-bottom: 2.8rem;
+    font-weight: 300;
+}
+
+/* Gold bordered CTA button */
+.hero-cta {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: 0.9rem 2.4rem;
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-cta:hover {
+    background: var(--accent);
+    color: var(--bg);
+    box-shadow: 0 0 30px rgba(200, 168, 78, 0.2);
+}
+
+/* ========================================
+   AUTH VIEW
+   ======================================== */
+#auth-view {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.auth-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 420px;
+}
+
+/* Back link */
+.auth-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    align-self: flex-start;
+}
+
+.auth-back:hover {
+    color: var(--text);
+}
+
+/* Auth card */
+.auth-card {
+    width: 100%;
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 2.6rem 2.4rem;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Auth forms */
+.auth-form {
+    display: none;
+}
+
+.auth-form.active {
+    display: block;
+    animation: fadeIn 0.35s ease forwards;
+}
+
+.auth-form h2 {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+}
+
+.subtitle {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 1.8rem;
+    line-height: 1.5;
+}
+
+/* Input groups */
+.input-group {
+    margin-bottom: 1.2rem;
+}
+
+.input-group label {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    color: var(--text);
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input::placeholder {
+    color: #555;
+}
+
+.input-group input:focus {
+    border-color: var(--focus-border);
+    box-shadow: 0 0 0 3px rgba(200, 168, 78, 0.1);
+}
+
+/* Form actions */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -0.4rem;
+    margin-bottom: 1.4rem;
+}
+
+.forgot-link {
+    font-size: 0.78rem;
+    color: var(--accent);
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.forgot-link:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+}
+
+/* Primary button */
+.btn-primary {
+    width: 100%;
+    padding: 0.85rem;
+    font-family: var(--font-heading);
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 4px 14px rgba(200, 168, 78, 0.2);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(200, 168, 78, 0.3);
+}
+
+.btn-primary:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn-primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Toggle text */
+.toggle-text {
+    text-align: center;
+    font-size: 0.84rem;
+    color: var(--muted);
+}
+
+.toggle-text a {
+    color: var(--accent);
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.toggle-text a:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+}
+
+/* Auth message (injected by script.js) */
+.auth-message {
+    min-height: 18px;
+    margin: -4px 0 12px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    text-align: center;
+}
+
+.auth-message.success {
+    color: #34d399;
+}
+
+.auth-message.error {
+    color: #f87171;
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 768px) {
+    .top-nav {
+        padding: 1rem 1.4rem;
+    }
+
+    .nav-center {
+        gap: 1.2rem;
+    }
+
+    .nav-link {
+        font-size: 0.7rem;
+    }
+
+    .hero-heading {
+        font-size: 2.4rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.92rem;
+        padding: 0 1rem;
+    }
+
+    .auth-card {
+        padding: 2rem 1.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-nav {
+        padding: 0.9rem 1rem;
+    }
+
+    .nav-center {
+        display: none;
+    }
+
+    .hero-heading {
+        font-size: 2rem;
+    }
+
+    .hero-badge {
+        font-size: 0.65rem;
+    }
+}
