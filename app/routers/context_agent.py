@@ -12,7 +12,7 @@ from app.agents.context_agent.graph import agent
 load_dotenv()
 
 from app.load_documents.text_splitting import text_splitter
-from app.vector_store.vector_store import upsert_chunks
+from ..retriever.retriever import create_retriever, get_retriever
 from docling.document_converter import DocumentConverter
 from langchain_core.documents import Document
 from langchain_community.document_loaders import PyMuPDFLoader
@@ -62,9 +62,9 @@ def process_document(file_path_str: str, current_user: int, filename: str):
     if not chunks:
         raise ValueError("No text chunks were created from this document")
 
-    num_vectors = upsert_chunks(chunks, current_user=current_user, filename=filename)
+    create_retriever(chunks, current_user)
 
-    return len(chunks), num_vectors
+    return len(chunks)
 
 
 @router.post("/upload")
@@ -89,7 +89,7 @@ async def upload(
                 f.write(chunk)
 
         try:
-            num_chunks, num_vectors = await run_in_threadpool(
+            num_chunks = await run_in_threadpool(
                 process_document,
                 str(file_path),
                 current_user,
@@ -98,8 +98,7 @@ async def upload(
 
             return {
                 "message": "Uploaded successfully",
-                "chunks": num_chunks,
-                "vectors": num_vectors
+                "chunks": num_chunks
             }
 
         except ValueError as e:
