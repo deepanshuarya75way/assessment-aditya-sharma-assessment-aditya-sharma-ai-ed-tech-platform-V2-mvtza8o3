@@ -197,6 +197,14 @@
                                         <input type="file" id="rag-file-input" accept=".pdf,.doc,.docx,.txt,.md,.markdown" style="display: none;" multiple>
                                         <button type="button" class="btn-primary" id="upload-rag-file" style="display:none;">Upload to RAG</button>
                                         <span id="rag-file-name" class="cortex-attached-tag" style="display: none;"></span>
+
+                                        <label for="duplicate-policy" > Duplicate handling: </label>
+                                        <select id="duplicate-policy" > 
+                                            <option value= "skip"> Skip duplicates </option>
+                                            <option value= "replace"> Replace duplicates </option>
+                                            <option value= "rename"> Rename duplicates </option>
+                                        </select>
+
                                     </div>
 
                                     <div class="cortex-toolbar-right">

@@ -8,8 +8,10 @@ from dotenv import load_dotenv
 from fastapi.concurrency import run_in_threadpool
 from core.chat_history_db import chat_sessions, messages
 from app.agents.context_agent.graph import agent
+from langchain_community.document_loaders import CSVLoader
 load_dotenv()
 
+from fastapi import Form
 from app.load_documents.text_splitting import text_splitter
 from ..retriever.retriever import create_retriever, get_retriever
 from docling.document_converter import DocumentConverter
@@ -42,9 +44,46 @@ def validate_file_type(filename: str):
 
 
 def process_document(file_path_str: str, current_user: int, filename: str):
-    ext = Path(file_path_str).suffix.lower()
 
     validate_file_type(filename)
+    ext = Path(file_path_str).suffix.lower()
+
+    markdown = ""
+
+    if ext == '.csv':
+        loader = CSVLoader(file_path_str)
+
+        rows = loader.load()
+
+        ALLOWED_EXTENSIONS = {".pdf", ".docx", ".txt", ".md"}
+
+        for i, row in enumerate(rows):
+            words = row.page_content.split()
+
+            found_paths = []
+            for word in words:
+
+                clean_word = word.strip('\'",. ')
+
+                if clean_word.lower().endswith(tuple('pdf','docx', 'txt', 'md')):
+                    found_paths.append(clean_word)
+
+            
+            for path in found_paths:
+                if path == '.pdf':
+
+                    loader = PyMuPDFLoader(file_path_str)
+                    docs = loader.load()
+                    markdown = "\n\n".join([d.page_content for d in docs])
+
+                else:
+                    if not converter:
+                        raise RuntimeError("DocumentConverter is not initialized")
+        
+                    result = converter.convert(path)
+                    markdown = result.document.export_to_markdown()
+
+
     
     if ext == ".pdf":
         loader = PyMuPDFLoader(file_path_str)
@@ -82,6 +121,7 @@ def process_document(file_path_str: str, current_user: int, filename: str):
 @router.post("/upload")
 async def upload(
     files: list[UploadFile] = File(...),
+    duplicate_policy: str = Form("skip"),
     current_user: int = Depends(OAuth2.get_current_user)):
 
     if not files:
@@ -93,11 +133,15 @@ async def upload(
     all_chunks = []
     total_chunks = 0
 
+    files_names = set()
+
     for file in files:
         file_path = None
         try:
             if not file.filename:
                 raise ValueError("Invalid name")
+
+            files_names.add(file.filename)
 
             file_path = (
                 UPLOAD_DIR/f"{uuid4()}{Path(file.filename).suffix.lower()}"

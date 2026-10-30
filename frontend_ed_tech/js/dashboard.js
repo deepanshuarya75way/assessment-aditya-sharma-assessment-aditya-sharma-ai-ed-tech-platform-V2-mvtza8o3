@@ -295,6 +295,8 @@ document.addEventListener('DOMContentLoaded', () => {
         for(const file of files){
             formData.append("files", file);
         }
+
+        formData.append("duplicate_policy", document.getElementById("duplicate-policy").value);
         try {
             const response = await fetch(`${API_BASE_URL}/rag-agent/upload`, {
                 method: "POST",
