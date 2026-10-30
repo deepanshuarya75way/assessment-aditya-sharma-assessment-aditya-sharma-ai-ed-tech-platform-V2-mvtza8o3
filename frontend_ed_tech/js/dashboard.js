@@ -270,56 +270,52 @@ document.addEventListener('DOMContentLoaded', () => {
     updateStrictDocsToggle();
 
     ragFileInput.addEventListener('change', () => {
-        const file = ragFileInput.files[0];
-        if (file) {
-            ragFileName.textContent = `Attached: ${file.name}`;
+        const files = Array.from(ragFileInput.files);
+        if (files.length > 0) {
+            ragFileName.textContent = `Attached: ${files.length} files`;
+
             ragFileName.style.display = 'inline-block';
-            setUploadStatus('', '');
-            uploadRagFileBtn.click();
+            setUploadStatus("", "");
+
+            uploadRagFiles();
         } else {
             ragFileName.style.display = 'none';
         }
     });
 
-    uploadRagFileBtn.addEventListener('click', async () => {
-        const file = ragFileInput.files[0];
+    async function uploadRagFiles(){
+        const files = ragFileInput.files;
 
-        if (!file) {
-            setUploadStatus('Choose a document first.', 'error');
+        if(files.length == 0){
+            alert('select file');
             return;
         }
-
         const formData = new FormData();
-        formData.append('file', file);
 
-        uploadRagFileBtn.disabled = true;
-        uploadRagFileBtn.textContent = 'Uploading...';
-        setUploadStatus('Uploading and indexing document...', '');
-
+        for(const file of files){
+            formData.append("files", file);
+        }
         try {
             const response = await fetch(`${API_BASE_URL}/rag-agent/upload`, {
-                method: 'POST',
+                method: "POST",
                 body: formData,
-                credentials: 'include',
+                credentials: "include"
             });
-            const data = await parseApiResponse(response);
 
-            if (!response.ok) {
-                throw new Error(getApiErrorMessage(data, 'Document upload failed'));
+            if(!response.ok){
+                throw new Error(await response.text());
             }
 
-            docsAvailable = true;
-            setUploadStatus(`${data.message}. ${data.chunks || 0} chunks, ${data.vectors || 0} vectors indexed.`, 'success');
-            appendMsg(`Document uploaded: ${file.name}`, 'system');
-            updateStrictDocsToggle();
-            openStrictDocsModal();
-        } catch (error) {
-            setUploadStatus(error.message, 'error');
-        } finally {
-            uploadRagFileBtn.disabled = false;
-            uploadRagFileBtn.textContent = 'Upload to RAG';
+            const data = await response.json();
+
+            console.log(data);
+
+            
+        } catch(err){
+            console.log("upload fail");
+            
         }
-    });
+    }
 
     strictDocsYes.addEventListener('click', () => {
         useStrictlyRetriever = true;

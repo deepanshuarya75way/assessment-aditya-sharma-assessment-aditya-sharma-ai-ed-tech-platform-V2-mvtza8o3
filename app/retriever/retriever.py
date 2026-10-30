@@ -10,11 +10,14 @@ embed_model = HuggingFaceEmbeddings(
 )
 
 
-def create_retriever(chunks, id: int | None = None):
+def create_retriever(chunks, id: int):
     vec_store = FAISS.from_documents(chunks, embed_model)
 
     retriever = vec_store.as_retriever(search_type = retriever_settings.RETRIEVER_SEARCH_TYPE,
     search_kwargs= {'k':retriever_settings.RETRIEVER_K, "lambda_mult": retriever_settings.RETRIEVER_LAMBDA_MULT})
+
+    print(f"registered: {id} ", type(id))
+    print(f'All keys: {RETRIEVERS.keys()}')
 
     RETRIEVERS[id] = retriever
 

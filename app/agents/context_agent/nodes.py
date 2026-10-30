@@ -10,7 +10,9 @@ from .prompts import (
 from .schemas import RetrieveDecision, QueryBreakdown, Answer
 from typing import Literal
 from langchain.messages import AIMessage
-from app.retriever.retriever import get_retriever
+from app.retriever.retriever import get_retriever, RETRIEVERS
+
+print(RETRIEVERS)
 
 
 def rewrite_query(state: State):
@@ -29,6 +31,8 @@ def decide_retrieval(state: State):
     if state.get("use_strictly_retriever") or state.get("docs_available"):
         return {"retrieval_needed": True}
 
+    print(state.get("id"))
+
     chat_history = state.get("chat_history") or []
     question = state.get("rewrite_query")
 
@@ -46,7 +50,8 @@ def route_after_decide(state: State) -> Literal["generate_direct", "retrieve"]:
 def retrieval(state: State):
     question = state.get("rewrite_query")
     id = state.get("id")
-    retriever = get_retriever(id=id)
+    retriever = get_retriever(id)
+    print(retriever)
     docs = retriever.invoke(question)
     return {"retrieved_docs": docs}
 

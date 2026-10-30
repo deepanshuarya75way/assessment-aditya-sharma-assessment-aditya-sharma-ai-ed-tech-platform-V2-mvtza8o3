@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 from fastapi.concurrency import run_in_threadpool
 from core.chat_history_db import chat_sessions, messages
 from app.agents.context_agent.graph import agent
-
 load_dotenv()
 
 from app.load_documents.text_splitting import text_splitter
@@ -31,8 +30,21 @@ router = APIRouter(
 )
 
 
+
+def validate_file_type(filename: str):
+    ALLOWED_EXTENSIONS = {".pdf", ".docx", ".txt", ".md"}
+
+    ext = Path(filename).suffix.lower()
+
+    if ext not in ALLOWED_EXTENSIONS:
+        raise ValueError("Unsupported file format")
+
+
+
 def process_document(file_path_str: str, current_user: int, filename: str):
     ext = Path(file_path_str).suffix.lower()
+
+    validate_file_type(filename)
     
     if ext == ".pdf":
         loader = PyMuPDFLoader(file_path_str)
@@ -62,60 +74,84 @@ def process_document(file_path_str: str, current_user: int, filename: str):
     if not chunks:
         raise ValueError("No text chunks were created from this document")
 
-    create_retriever(chunks, current_user)
+    # create_retriever(chunks, current_user)
 
-    return len(chunks)
+    return chunks
 
 
 @router.post("/upload")
 async def upload(
-    file: UploadFile = File(...),
-    current_user: int = Depends(OAuth2.get_current_user)
-):
+    files: list[UploadFile] = File(...),
+    current_user: int = Depends(OAuth2.get_current_user)):
 
-    if not file.filename:
-        raise HTTPException(
-            status_code=400,
-            detail="No file was uploaded"
-        )
+    if not files:
+        raise HTTPException(status_code = 400, detail = "No files")
 
-    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+    UPLOAD_DIR.mkdir(parents = True, exist_ok= True)
 
-    file_path = UPLOAD_DIR / f"{uuid4()}{Path(file.filename).suffix}"
+    results = []
+    all_chunks = []
+    total_chunks = 0
 
-    try:
-        with open(file_path, "wb") as f:
-            while chunk := await file.read(1024 * 1024):
-                f.write(chunk)
-
+    for file in files:
+        file_path = None
         try:
-            num_chunks = await run_in_threadpool(
-                process_document,
-                str(file_path),
-                current_user,
-                file.filename
+            if not file.filename:
+                raise ValueError("Invalid name")
+
+            file_path = (
+                UPLOAD_DIR/f"{uuid4()}{Path(file.filename).suffix.lower()}"
             )
 
-            return {
-                "message": "Uploaded successfully",
-                "chunks": num_chunks
-            }
+            with open(file_path, "wb") as f:
+                while chunk:= await file.read(1024*1024):
+                    f.write(chunk)
+
+            chunks = await run_in_threadpool(
+                process_document, str(file_path), current_user, file.filename
+            )
+            if not chunks: raise ValueError(
+                "no chunks"
+            )
+
+            all_chunks.extend(chunks)
+            total_chunks += len(chunks)
+
+            results.append({
+                "filename": file.filename,
+                "status": "success",
+                "chunks": len(chunks)
+            })
 
         except ValueError as e:
-            raise HTTPException(
-                status_code=400,
-                detail=str(e)
-            )
+            results.append({
+                "filename": file.filename,
+                "status":"failed",
+                "error": str(e)
+            })
 
-        except Exception as e:
-            raise HTTPException(
-                status_code=500,
-                detail=f"Document processing failed: {str(e)}"
-            )
+        finally:
+            if file_path and file_path.exists():
+                file_path.unlink()
 
-    finally:
-        if file_path.exists():
-            file_path.unlink()
+    print("registering retreiever for id: ", id)
+    create_retriever(all_chunks, id=int(current_user))
+    
+
+    return {
+        "message": "Upload success",
+        "total_files": len(files),
+        "results": results,
+        "chunks": total_chunks,
+
+    }
+
+
+
+
+
+
+
 
 
 @router.post("/chat")
